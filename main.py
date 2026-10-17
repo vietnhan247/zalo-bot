@@ -1,5 +1,4 @@
-from fastapi import FastAPI, BackgroundTasks, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, BackgroundTasks, Request, Response
 import uvicorn
 import requests
 import os
@@ -11,7 +10,7 @@ app = FastAPI()
 
 ZALO_ACCESS_TOKEN = os.getenv("ZALO_ACCESS_TOKEN")
 
-# Trang HTML chứa đầy đủ thẻ Meta Zalo yêu cầu
+# Trang HTML xác thực chuẩn Zalo
 HTML_CONTENT = """<!DOCTYPE html>
 <html>
 <head>
@@ -24,14 +23,14 @@ HTML_CONTENT = """<!DOCTYPE html>
 </body>
 </html>"""
 
-# Trả về trang HTML chứa thẻ Meta tại trang chủ và tất cả các đường dẫn .html
+# Trả về HTML thô chuẩn cho trang chủ và mọi file .html
 @app.get("/")
 def home():
-    return HTMLResponse(content=HTML_CONTENT, status_code=200)
+    return Response(content=HTML_CONTENT, media_type="text/html", status_code=200)
 
 @app.get("/{filename:path}")
 def verify_zalo_all(filename: str):
-    return HTMLResponse(content=HTML_CONTENT, status_code=200)
+    return Response(content=HTML_CONTENT, media_type="text/html", status_code=200)
 
 # Route Webhook nhận tin nhắn
 @app.post("/zalo-webhook")
