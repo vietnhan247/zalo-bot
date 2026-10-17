@@ -12,14 +12,14 @@ app = FastAPI()
 ZALO_ACCESS_TOKEN = os.getenv("ZALO_ACCESS_TOKEN")
 
 VERIFY_CODE = "There Is No Limit To What You Can Accomplish Using Zalo!"
-# Đã sửa lại chữ I hoa chuẩn xác trong tên file:
 VERIFY_FILENAME = "zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html"
 
-@app.get("/")
+# Trả về mã xác thực ngay tại trang chủ
+@app.get("/", response_class=PlainTextResponse)
 def home():
-    return {"status": "Zalo Bot is running"}
+    return VERIFY_CODE
 
-# Route xác thực domain Zalo
+# Trả về mã xác thực khi Zalo gọi file html
 @app.get(f"/{VERIFY_FILENAME}", response_class=PlainTextResponse)
 def verify_zalo_get():
     return VERIFY_CODE
