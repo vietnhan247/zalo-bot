@@ -1,5 +1,5 @@
 from fastapi import FastAPI, BackgroundTasks, Request
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse
 import uvicorn
 import requests
 import os
@@ -10,17 +10,13 @@ load_dotenv()
 app = FastAPI()
 
 ZALO_ACCESS_TOKEN = os.getenv("ZALO_ACCESS_TOKEN")
-
 VERIFY_TEXT = "There Is No Limit To What You Can Accomplish Using Zalo!"
-VERIFY_FILENAME = "zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html"
 
-# Trả về cả dạng HTML và Plain Text để Zalo quét kiểu nào cũng trúng 100%
-@app.get(f"/{VERIFY_FILENAME}")
-def verify_zalo():
-    return HTMLResponse(content=VERIFY_TEXT, status_code=200)
-
-@app.get("/")
-def home():
+# Bắt tất cả các file .html hoặc đường dẫn xác thực Zalo
+@app.get("/{filename:path}")
+def verify_zalo_all(filename: str):
+    if "zalo_verifier" in filename or filename.endswith(".html"):
+        return HTMLResponse(content=VERIFY_TEXT, status_code=200)
     return HTMLResponse(content=VERIFY_TEXT, status_code=200)
 
 # Route Webhook nhận tin nhắn
