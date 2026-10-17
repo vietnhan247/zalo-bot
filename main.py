@@ -1,5 +1,5 @@
 from fastapi import FastAPI, BackgroundTasks, Request
-from fastapi.responses import PlainTextResponse, HTMLResponse
+from fastapi.responses import PlainTextResponse
 import uvicorn
 import requests
 import os
@@ -12,13 +12,14 @@ app = FastAPI()
 ZALO_ACCESS_TOKEN = os.getenv("ZALO_ACCESS_TOKEN")
 
 VERIFY_CODE = "There Is No Limit To What You Can Accomplish Using Zalo!"
+# Đã sửa lại chữ I hoa chuẩn xác trong tên file:
 VERIFY_FILENAME = "zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html"
 
 @app.get("/")
 def home():
     return {"status": "Zalo Bot is running"}
 
-# Đường dẫn xác thực domain Zalo (Trả về đúng định dạng Plain Text)
+# Route xác thực domain Zalo
 @app.get(f"/{VERIFY_FILENAME}", response_class=PlainTextResponse)
 def verify_zalo_get():
     return VERIFY_CODE
@@ -27,7 +28,7 @@ def verify_zalo_get():
 def verify_zalo_post():
     return VERIFY_CODE
 
-# Webhook nhận tin nhắn
+# Route Webhook nhận tin nhắn
 @app.post("/zalo-webhook")
 async def zalo_webhook(request: Request, background_tasks: BackgroundTasks):
     data = await request.json()
