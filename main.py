@@ -1,5 +1,5 @@
 from fastapi import FastAPI, BackgroundTasks, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import PlainTextResponse, HTMLResponse
 import uvicorn
 import requests
 import os
@@ -11,20 +11,23 @@ app = FastAPI()
 
 ZALO_ACCESS_TOKEN = os.getenv("ZALO_ACCESS_TOKEN")
 
+VERIFY_CODE = "There Is No Limit To What You Can Accomplish Using Zalo!"
+VERIFY_FILENAME = "zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html"
+
 @app.get("/")
 def home():
     return {"status": "Zalo Bot is running"}
 
-# Đường dẫn xác thực domain Zalo
-@app.get("/zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html", response_class=HTMLResponse)
-def verify_zalo():
-    return "There Is No Limit To What You Can Accomplish Using Zalo!"
+# Đường dẫn xác thực domain Zalo (Trả về đúng định dạng Plain Text)
+@app.get(f"/{VERIFY_FILENAME}", response_class=PlainTextResponse)
+def verify_zalo_get():
+    return VERIFY_CODE
 
-@app.post("/zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html", response_class=HTMLResponse)
+@app.post(f"/{VERIFY_FILENAME}", response_class=PlainTextResponse)
 def verify_zalo_post():
-    return "There Is No Limit To What You Can Accomplish Using Zalo!"
+    return VERIFY_CODE
 
-# Đường dẫn nhận tin nhắn Webhook
+# Webhook nhận tin nhắn
 @app.post("/zalo-webhook")
 async def zalo_webhook(request: Request, background_tasks: BackgroundTasks):
     data = await request.json()
