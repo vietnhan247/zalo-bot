@@ -1,4 +1,5 @@
 from fastapi import FastAPI, BackgroundTasks, Request
+from fastapi.responses import HTMLResponse
 import uvicorn
 import requests
 import os
@@ -14,6 +15,16 @@ ZALO_ACCESS_TOKEN = os.getenv("ZALO_ACCESS_TOKEN")
 def home():
     return {"status": "Zalo Bot is running"}
 
+# Đường dẫn xác thực domain Zalo
+@app.get("/zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html", response_class=HTMLResponse)
+def verify_zalo():
+    return "There Is No Limit To What You Can Accomplish Using Zalo!"
+
+@app.post("/zalo_verifierOS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv.html", response_class=HTMLResponse)
+def verify_zalo_post():
+    return "There Is No Limit To What You Can Accomplish Using Zalo!"
+
+# Đường dẫn nhận tin nhắn Webhook
 @app.post("/zalo-webhook")
 async def zalo_webhook(request: Request, background_tasks: BackgroundTasks):
     data = await request.json()
