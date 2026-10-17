@@ -10,14 +10,28 @@ load_dotenv()
 app = FastAPI()
 
 ZALO_ACCESS_TOKEN = os.getenv("ZALO_ACCESS_TOKEN")
-VERIFY_TEXT = "There Is No Limit To What You Can Accomplish Using Zalo!"
 
-# Bắt tất cả các file .html hoặc đường dẫn xác thực Zalo
+# Trang HTML chứa đầy đủ thẻ Meta Zalo yêu cầu
+HTML_CONTENT = """<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="zalo-platform-site-verification" content="OS6n3-laP0uCqE5Kp_9pTapI-aAWcl4VDJOv" />
+    <title>Zalo Verification</title>
+</head>
+<body>
+    There Is No Limit To What You Can Accomplish Using Zalo!
+</body>
+</html>"""
+
+# Trả về trang HTML chứa thẻ Meta tại trang chủ và tất cả các đường dẫn .html
+@app.get("/")
+def home():
+    return HTMLResponse(content=HTML_CONTENT, status_code=200)
+
 @app.get("/{filename:path}")
 def verify_zalo_all(filename: str):
-    if "zalo_verifier" in filename or filename.endswith(".html"):
-        return HTMLResponse(content=VERIFY_TEXT, status_code=200)
-    return HTMLResponse(content=VERIFY_TEXT, status_code=200)
+    return HTMLResponse(content=HTML_CONTENT, status_code=200)
 
 # Route Webhook nhận tin nhắn
 @app.post("/zalo-webhook")
